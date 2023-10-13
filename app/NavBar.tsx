@@ -25,14 +25,16 @@ const NavBar = () => {
       </Link>
       <ul className="flex space-x-4">
         {menus.map((e) => {
-          const classNames = classnames({
-            "text-zinc-500": true,
-            "hover:text-zinc-600": true,
-            "text-zinc-900": pathName === e.href,
-          });
           return (
             <li key={e.href}>
-              <Link className={classNames} href={e.href}>
+              <Link
+                className={classnames({
+                  "text-zinc-500": pathName !== e.href,
+                  "hover:text-zinc-800 transition-colors": true,
+                  "text-zinc-900": pathName === e.href,
+                })}
+                href={e.href}
+              >
                 {e.label}
               </Link>
             </li>
