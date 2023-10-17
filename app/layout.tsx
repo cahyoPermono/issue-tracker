@@ -30,7 +30,7 @@ export default function RootLayout({
           <nav>
             <NavBar />
           </nav>
-          <main className="pl-5">{children}</main>
+          <main className="pl-5 pr-5">{children}</main>
         </Theme>
       </body>
     </html>
