@@ -11,7 +11,7 @@ const loading = () => {
         <Skeleton width="8rem" />
       </Flex>
       <Card className="mt-4 max-w-xl prose">
-        <Skeleton count={3} width="20rem" />
+        <Skeleton count={3} />
       </Card>
     </Box>
   );
