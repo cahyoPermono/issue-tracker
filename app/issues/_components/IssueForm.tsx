@@ -1,22 +1,17 @@
 "use client";
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-
-import "easymde/dist/easymde.min.css";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/validationSchema";
-import { z } from "zod";
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage, Spinner } from "@/app/components";
-import dynamic from "next/dynamic";
+import { issueSchema } from "@/app/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
-type IssueFormType = z.infer<typeof createIssueSchema>;
+import axios from "axios";
+import "easymde/dist/easymde.min.css";
+import { useRouter } from "next/navigation";
+import SimpleMDE from "react-simplemde-editor";
+import { z } from "zod";
+type IssueFormType = z.infer<typeof issueSchema>;
 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
   const router = useRouter();
@@ -26,7 +21,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<IssueFormType>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
   const [error, setError] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
@@ -34,8 +29,10 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setIsSubmit(true);
-      await axios.post("/api/issues", data);
+      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
+      else await axios.post("/api/issues", data);
       router.push("/issues");
+      router.refresh();
     } catch (error) {
       setIsSubmit(false);
       setError("An Expected Error Occured");
@@ -68,7 +65,8 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={isSubmit} type="submit">
-          Submit New Issue {isSubmit && <Spinner />}
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
+          {isSubmit && <Spinner />}
         </Button>
       </form>
     </div>
