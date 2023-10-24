@@ -50,9 +50,6 @@ export async function DELETE(
     return NextResponse.json({ error: "Invalid Issue" }, { status: 404 });
   }
 
-  console.log('masuk');
-  
-
   await prisma.issue.delete({
     where: {
       id: issue.id,

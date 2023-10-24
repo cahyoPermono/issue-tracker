@@ -11,6 +11,8 @@ interface Props {
   params: { id: string };
 }
 const page = async ({ params }: Props) => {
+  console.log('masuk sini');
+
   const issue = await prisma.issue.findUnique({
     where: {
       id: parseInt(params.id),

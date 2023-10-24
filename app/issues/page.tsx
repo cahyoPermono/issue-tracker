@@ -6,13 +6,17 @@ import {
   TableColumnHeaderCell,
 } from "@radix-ui/themes";
 // import Link from "next/link";
-import Link from '../components/Link'
+import Link from "../components/Link";
 import React from "react";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import IssueAction from "./IssueAction";
 
 const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+  const issues = await prisma.issue.findMany({
+    orderBy: {
+      id: "desc",
+    },
+  });
 
   return (
     <div>
@@ -54,5 +58,5 @@ const IssuesPage = async () => {
   );
 };
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 export default IssuesPage;
