@@ -4,6 +4,8 @@ import React from "react";
 import { AiFillBug } from "react-icons/ai";
 import classnames from "classnames";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Box } from "@radix-ui/themes";
 const NavBar = () => {
   const menus = [
     {
@@ -17,6 +19,7 @@ const NavBar = () => {
   ];
 
   const pathName = usePathname();
+  const { status, data: session } = useSession();
 
   return (
     <div className="flex border-b h-14 items-center mb-5 space-x-4 px-4">
@@ -41,6 +44,14 @@ const NavBar = () => {
           );
         })}
       </ul>
+      <Box>
+        {status === "authenticated" && (
+          <Link href="/api/auth/signout">Log Out</Link>
+        )}
+        {status === "unauthenticated" && (
+          <Link href="/api/auth/signin">Log In</Link>
+        )}
+      </Box>
     </div>
   );
 };
